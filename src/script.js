@@ -2,6 +2,12 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
 
+const textureLoader = new THREE.TextureLoader();
+
+const texture1 = textureLoader.load("/textures/matcap.png");
+const texture2 = textureLoader.load("/textures/matcap2.png");
+const texture3 = textureLoader.load("/textures/matcap3.jpeg");
+
 /**
  * Base
  */
@@ -13,11 +19,18 @@ const scene = new THREE.Scene();
 
 // Axes
 const axesHelper = new THREE.AxesHelper(5);
-scene.add(axesHelper);
+// scene.add(axesHelper);
 
 // Object
 const geometry = new THREE.BoxGeometry(3, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+// Material
+// const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+// const material = new THREE.MeshMatcapMaterial();
+// material.matcap = texture1;
+
+const material = new THREE.MeshLambertMaterial();
 
 // Object 1
 const cube1 = new THREE.Mesh(geometry, material);
@@ -39,6 +52,24 @@ const group2 = group1.clone();
 group2.position.x = -2;
 
 scene.add(group2);
+
+// Lights ambient
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
+scene.add(ambientLight);
+
+// Lights - red
+const pointLight = new THREE.PointLight(0xf00a3b, 0.9);
+pointLight.position.x = 5;
+pointLight.position.y = 0;
+pointLight.position.z = 0;
+scene.add(pointLight);
+
+// Lights - blue
+const pointLight2 = new THREE.PointLight(0x00ffd0, 0.9);
+pointLight2.position.x = 0;
+pointLight2.position.y = 0;
+pointLight2.position.z = 5;
+scene.add(pointLight2);
 
 // Sizes
 const sizes = {
@@ -85,8 +116,8 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Update objects
-  group1.rotation.y = 0.5 * elapsedTime;
-  group2.rotation.y = 0.5 * elapsedTime;
+  group1.rotation.y = 0.2 * elapsedTime;
+  group2.rotation.y = 0.2 * elapsedTime;
 
   // Update controls
   controls.update();
