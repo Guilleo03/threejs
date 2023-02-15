@@ -28,7 +28,7 @@ const geometry = new THREE.BoxGeometry(3, 1, 1);
 // const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 
 // const material = new THREE.MeshMatcapMaterial();
-// material.matcap = texture1;
+// material.matcap = texture3;
 
 const material = new THREE.MeshLambertMaterial();
 
@@ -54,22 +54,34 @@ group2.position.x = -2;
 scene.add(group2);
 
 // Lights ambient
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
 // Lights - red
-const pointLight = new THREE.PointLight(0xf00a3b, 0.9);
-pointLight.position.x = 5;
-pointLight.position.y = 0;
-pointLight.position.z = 0;
-scene.add(pointLight);
+const pointRedLight = new THREE.PointLight(0xf00a3b, 0.9);
+pointRedLight.position.x = 6;
+pointRedLight.position.y = 0;
+pointRedLight.position.z = 0;
+
+const pointRedLight2 = new THREE.PointLight(0xf00a3b, 0.9);
+pointRedLight.position.x = 0;
+pointRedLight.position.y = 0;
+pointRedLight.position.z = -6;
+
+scene.add(pointRedLight, pointRedLight2);
 
 // Lights - blue
-const pointLight2 = new THREE.PointLight(0x00ffd0, 0.9);
-pointLight2.position.x = 0;
-pointLight2.position.y = 0;
-pointLight2.position.z = 5;
-scene.add(pointLight2);
+const pointBlueLight = new THREE.PointLight(0x00ffd0, 0.9);
+pointBlueLight.position.x = 0;
+pointBlueLight.position.y = 0;
+pointBlueLight.position.z = 6;
+
+const pointBlueLight2 = new THREE.PointLight(0x00ffd0, 0.9);
+pointBlueLight2.position.x = -6;
+pointBlueLight2.position.y = 0;
+pointBlueLight2.position.z = 0;
+
+scene.add(pointBlueLight, pointBlueLight2);
 
 // Sizes
 const sizes = {
