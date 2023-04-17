@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 
 const textureLoader = new THREE.TextureLoader();
-
+// const texture1 = textureLoader.load("/textures/matcap++.png");
 const texture1 = textureLoader.load("/textures/matcap.png");
-const texture2 = textureLoader.load("/textures/matcap2.png");
-const texture3 = textureLoader.load("/textures/matcap3.jpeg");
+// const texture1 = textureLoader.load("/textures/matcap2.png");
+// const texture1 = textureLoader.load("/textures/matcap3.png");
 
 /**
  * Base
@@ -18,19 +20,38 @@ const canvas = document.querySelector("canvas.webgl");
 const scene = new THREE.Scene();
 
 // Axes
-const axesHelper = new THREE.AxesHelper(5);
+// const axesHelper = new THREE.AxesHelper(5);
 // scene.add(axesHelper);
+
+// Text
+const fontLoader = new FontLoader();
+
+fontLoader.load("/fonts/helvetiker_regular.typeface.json", function (font) {
+  const textGeometry = new TextGeometry("hellohello", {
+    font: font,
+    size: 2.5,
+    height: 0.5,
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 0.03,
+    bevelSize: 0.02,
+    bevelOffset: 0,
+    bevelSegments: 5,
+  });
+
+  const textMaterial = new THREE.MeshMatcapMaterial();
+  textMaterial.matcap = texture1;
+  const text = new THREE.Mesh(textGeometry, textMaterial);
+  text.rotateX(-70.7);
+  scene.add(text);
+});
 
 // Object
 const geometry = new THREE.BoxGeometry(3, 1, 1);
 
 // Material
-// const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-
-// const material = new THREE.MeshMatcapMaterial();
-// material.matcap = texture3;
-
-const material = new THREE.MeshLambertMaterial();
+const material = new THREE.MeshMatcapMaterial();
+material.matcap = texture1;
 
 // Object 1
 const cube1 = new THREE.Mesh(geometry, material);
@@ -53,35 +74,14 @@ group2.position.x = -2;
 
 scene.add(group2);
 
-// Lights ambient
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
-scene.add(ambientLight);
+// group 3
+const group3 = new THREE.Group();
+group3.position.x = -5;
+group3.position.z = -1;
+group3.position.y = 0;
+group3.add(group1, group2);
 
-// Lights - red
-const pointRedLight = new THREE.PointLight(0xf00a3b, 0.9);
-pointRedLight.position.x = 6;
-pointRedLight.position.y = 0;
-pointRedLight.position.z = 0;
-
-const pointRedLight2 = new THREE.PointLight(0xf00a3b, 0.9);
-pointRedLight.position.x = 0;
-pointRedLight.position.y = 0;
-pointRedLight.position.z = -6;
-
-scene.add(pointRedLight, pointRedLight2);
-
-// Lights - blue
-const pointBlueLight = new THREE.PointLight(0x00ffd0, 0.9);
-pointBlueLight.position.x = 0;
-pointBlueLight.position.y = 0;
-pointBlueLight.position.z = 6;
-
-const pointBlueLight2 = new THREE.PointLight(0x00ffd0, 0.9);
-pointBlueLight2.position.x = -6;
-pointBlueLight2.position.y = 0;
-pointBlueLight2.position.z = 0;
-
-scene.add(pointBlueLight, pointBlueLight2);
+scene.add(group3);
 
 // Sizes
 const sizes = {
@@ -105,9 +105,9 @@ window.addEventListener("resize", () => {
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
-camera.position.z = 4;
-camera.position.y = 6;
-camera.position.x = 2;
+camera.position.z = 6;
+camera.position.y = 16;
+camera.position.x = 0;
 scene.add(camera);
 
 // Controls
@@ -128,8 +128,7 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Update objects
-  group1.rotation.y = 0.2 * elapsedTime;
-  group2.rotation.y = 0.2 * elapsedTime;
+  group3.rotation.y = 0.2 * elapsedTime;
 
   // Update controls
   controls.update();
@@ -142,18 +141,3 @@ const tick = () => {
 };
 
 tick();
-
-// Toggle background color
-let darkBg = true;
-
-document.querySelector(".toggle-bg").addEventListener("click", () => {
-  if (darkBg) {
-    darkBg = false;
-    renderer.setClearColor(0xffffff);
-    material.color.setHex(0x000000);
-  } else {
-    darkBg = true;
-    renderer.setClearColor(0x000000);
-    material.color.setHex(0xffffff);
-  }
-});
